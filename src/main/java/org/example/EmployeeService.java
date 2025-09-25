@@ -1,5 +1,6 @@
 
 package org.example;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.example.Connections.Hibernatecon;
@@ -22,7 +23,9 @@ public SessionFactory sessionFactory= Hibernatecon.getSession();
     }
     public Employee GetbyId(int id){
         try(Session session=sessionFactory.openSession()){
-            Employee e=session.getReference(Employee.class,id);
+            //cannot use get refrence beacuse of lazy intializer
+            Employee e=session.byId(Employee.class).getReference(id);
+            Hibernate.initialize(e);
             return e;
         } catch (Exception e) {
             throw new RuntimeException(e);
